@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useSyncExternalStore } from "react"
 
 function createStore(createState) {
     // global state
@@ -37,21 +37,22 @@ function createStore(createState) {
 }
 
 function useStore(api, selector=state => state) {
-    const [, forceRender] = useState(0)
+    // const [, forceRender] = useState(0)
 
-    useEffect(() => {
-        const unsubscribe = api.subscribe((state, prevState) => {
-            // compare newState and oldState, if they are not equal, forceRender, otherwise do nothing
-            const newObj = selector(state)
-            const oldObj = selector(prevState)
-            if (newObj !== oldObj) {
-                forceRender(Math.random()) // forceRender
-            }
-        })
-        return () => {
-            unsubscribe()
-        }
-    }, [])
+    // useEffect(() => {
+    //     const unsubscribe = api.subscribe((state, prevState) => {
+    //         // compare newState and oldState, if they are not equal, forceRender, otherwise do nothing
+    //         const newObj = selector(state)
+    //         const oldObj = selector(prevState)
+    //         if (newObj !== oldObj) {
+    //             forceRender(Math.random()) // forceRender
+    //         }
+    //     })
+    //     return () => {
+    //         unsubscribe()
+    //     }
+    // }, [])
+    useSyncExternalStore(api.subscribe, api.getState)
 
     return selector(api.getState())
 }
