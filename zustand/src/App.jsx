@@ -4,13 +4,26 @@ import ComTwo from "./ComTwo";
 import { create } from "zustand";
 
 // export const AppContext = createContext();
-
-export const useNumStore = create((set) => ({
-  one: 1,
-  two: 1,
-  setOne: (value) => set((state) => ({ one: value })),
-  setTwo: (value) => set((state) => ({ two: value })),
-}));
+const logMiddleware = (func) => {
+  console.log(func);
+  return (set, get, store) => {
+    const newSet = (...arg) => {
+      // console.log("调用了 set，新的 state：", get());
+      console.log("call set");
+      return set(...arg);
+    };
+    console.log("set", newSet);
+    return func(newSet);
+  };
+};
+export const useNumStore = create(
+  logMiddleware((set) => ({
+    one: 1,
+    two: 1,
+    setOne: (value) => set((state) => ({ one: value })),
+    setTwo: (value) => set((state) => ({ two: value })),
+  }))
+);
 
 function App() {
   // const [one, setOne] = useState(1);
