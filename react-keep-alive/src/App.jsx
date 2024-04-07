@@ -1,3 +1,6 @@
+import { createContext } from "react";
+import { useContext } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import {
   RouterProvider,
@@ -9,20 +12,53 @@ import {
 } from "react-router-dom";
 
 const obj = {};
-const elementList = new Set();
-function Layout() {
+
+const KeepAliveContext = createContext({});
+
+function KeepAliveProvider({ children, keepPaths }) {
+  return (
+    <KeepAliveContext.Provider value={{ keepPaths }}>
+      {children}
+    </KeepAliveContext.Provider>
+  );
+}
+
+const elementsCache = new Map();
+function useKeepAliveOutlet() {
   const element = useOutlet();
   const { pathname } = useLocation();
-  if (!obj[pathname]) {
-    elementList.add(element);
-    obj[pathname] = element;
+  const { keepPaths } = useContext(KeepAliveContext);
+  const isKeepAlive = keepPaths.includes(pathname);
+  if (isKeepAlive) {
+    elementsCache.set(pathname, element);
   }
+
+  return (
+    <>
+      {[...elementsCache].map(([key, ele], idx) => {
+        const hidden = key !== pathname;
+        return (
+          <div key={idx} hidden={hidden}>
+            {ele}
+          </div>
+        );
+      })}
+      {!isKeepAlive && element}
+    </>
+  );
+}
+
+function Layout() {
+  const element = useKeepAliveOutlet();
+  const { pathname } = useLocation();
+
   return (
     <div>
       <h1>this is layout, pathname is {pathname}</h1>
+      {element}
       {/* <Outlet /> */}
       {/* {obj[pathname]} */}
-      {Object.entries(obj).map(([key, ele], idx) => {
+      {/* {Object.entries(obj).map(([key, ele], idx) => {
         console.log(key, ele);
         const hidden = key !== pathname;
         return (
@@ -30,7 +66,7 @@ function Layout() {
             {ele}
           </div>
         );
-      })}
+      })} */}
     </div>
   );
 }
@@ -93,7 +129,9 @@ function App() {
     <div>
       <h1>this is home</h1>
       <hr />
-      <RouterProvider router={router} />
+      <KeepAliveProvider keepPaths={["/bbb"]}>
+        <RouterProvider router={router} />
+      </KeepAliveProvider>
     </div>
   );
 }
