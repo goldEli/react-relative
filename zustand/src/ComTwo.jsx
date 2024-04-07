@@ -3,9 +3,12 @@ import { useNumStore } from "./App";
 
 function ComTwo() {
   // const { two, setTwo } = useContext(AppContext);
-  const setTwo = useNumStore(state => state.setTwo);
+  const setTwo = useNumStore((state) => state.setTwo);
   const two = useNumStore((state) => state.two);
   console.log("two render");
+  useNumStore.subscribe(() => {
+    console.log("subscribe", useNumStore.getState());
+  });
 
   return (
     <div

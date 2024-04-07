@@ -1,7 +1,8 @@
 import { createContext, useState } from "react";
-import ComOne from "./ComOne";
+// import ComOne from "./ComOne";
 import ComTwo from "./ComTwo";
-import { create } from "zustand";
+import { create } from "./my-zustand";
+// import { create } from "zustand";
 
 // export const AppContext = createContext();
 const logMiddleware = (func) => {
@@ -33,7 +34,7 @@ function App() {
   return (
     <div>
       {/* {one}, {two} */}
-      <ComOne />
+      {/* <ComOne /> */}
       <ComTwo />
     </div>
   );
