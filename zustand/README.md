@@ -1,8 +1,8 @@
-# React + Vite
+# create your own zustand 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* create 传入 createState 方法，参数为 set get api 三个参数，返回 useXXXStore(selector)
+* createStore 接收 createState 返回 api
+    * api 包含 setState getState  subscribe destroy 三个方法
+* useBoundStore = (selector) => useStore(select, api)
+* useBoundStore  bind api
+* return useBoundStore
