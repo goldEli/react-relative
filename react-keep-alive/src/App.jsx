@@ -2,15 +2,35 @@ import { useState } from "react";
 import {
   RouterProvider,
   createBrowserRouter,
-  Outlet,
+  // Outlet,
   Link,
+  useOutlet,
+  useLocation,
 } from "react-router-dom";
 
+const obj = {};
+const elementList = new Set();
 function Layout() {
+  const element = useOutlet();
+  const { pathname } = useLocation();
+  if (!obj[pathname]) {
+    elementList.add(element);
+    obj[pathname] = element;
+  }
   return (
     <div>
-      <h1>this is layout</h1>
-      <Outlet />
+      <h1>this is layout, pathname is {pathname}</h1>
+      {/* <Outlet /> */}
+      {/* {obj[pathname]} */}
+      {Object.entries(obj).map(([key, ele], idx) => {
+        console.log(key, ele);
+        const hidden = key !== pathname;
+        return (
+          <div hidden={hidden} key={idx}>
+            {ele}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -37,7 +57,6 @@ function Bbb() {
     </div>
   );
 }
-
 
 function Ccc() {
   return (
