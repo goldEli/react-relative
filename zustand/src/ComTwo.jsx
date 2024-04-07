@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useNumStore } from "./App";
 
 function ComTwo() {
@@ -6,9 +6,12 @@ function ComTwo() {
   const setTwo = useNumStore((state) => state.setTwo);
   const two = useNumStore((state) => state.two);
   console.log("two render");
-  useNumStore.subscribe(() => {
-    console.log("subscribe", useNumStore.getState());
-  });
+  useEffect(() => {
+    const unsubscribe = useNumStore.subscribe(() => {
+      console.log("subscribe", useNumStore.getState());
+    });
+    return unsubscribe
+  }, []);
 
   return (
     <div

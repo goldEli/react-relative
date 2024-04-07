@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 
 function createStore(createState) {
+    // global state
     let state
     const listeners = new Set()
 
@@ -35,17 +36,21 @@ function createStore(createState) {
 
 }
 
-function useStore(api, selector) {
+function useStore(api, selector=state => state) {
     const [, forceRender] = useState(0)
 
     useEffect(() => {
-        api.subscribe((state, prevState) => {
+        const unsubscribe = api.subscribe((state, prevState) => {
+            // compare newState and oldState, if they are not equal, forceRender, otherwise do nothing
             const newObj = selector(state)
             const oldObj = selector(prevState)
             if (newObj !== oldObj) {
                 forceRender(Math.random()) // forceRender
             }
         })
+        return () => {
+            unsubscribe()
+        }
     }, [])
 
     return selector(api.getState())
@@ -54,6 +59,9 @@ function useStore(api, selector) {
 export const create = (createState) => {
     const api = createStore(createState)
 
+    /**
+     *  useXXXStore(state => state.xxx)
+     */
     const useBoundStore = (selector) => useStore(api, selector)
 
     Object.assign(useBoundStore, api)

@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-// import ComOne from "./ComOne";
+import ComOne from "./ComOne";
 import ComTwo from "./ComTwo";
 import { create } from "./my-zustand";
 // import { create } from "zustand";
@@ -34,7 +34,7 @@ function App() {
   return (
     <div>
       {/* {one}, {two} */}
-      {/* <ComOne /> */}
+      <ComOne />
       <ComTwo />
     </div>
   );
