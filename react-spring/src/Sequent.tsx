@@ -1,40 +1,53 @@
-import { animated, useSpring, useSprings, useTrail } from "@react-spring/web";
-import { useEffect } from "react";
+import {
+  animated,
+  useChain,
+  useSpring,
+  useSpringRef,
+  useSprings,
+  useTrail,
+} from "@react-spring/web";
 
-function App() {
-  const [springs, api] = useTrail(3,() => {
-    return {
-      from: { width: 100 },
-      // to: { width: 200, height: 200 },
+export default function App() {
+  const api1 = useSpringRef();
+
+  const [springs] = useTrail(
+    3,
+    () => ({
+      ref: api1,
+      from: { width: 0 },
+      to: { width: 300 },
       config: {
-        duration: 2000,
-        // mass: 2,
-        // friction: 10,
-        // tension: 400,
+        duration: 1000,
       },
-    };
-  });
-  const handleClick = () => {
-    api.start({ width: 200 });
-  };
+    }),
+    []
+  );
+
+  const api2 = useSpringRef();
+
+  const [springs2] = useSprings(
+    3,
+    () => ({
+      ref: api2,
+      from: { height: 100 },
+      to: { height: 50 },
+      config: {
+        duration: 1000,
+      },
+    }),
+    []
+  );
+
+  useChain([api1, api2], [0, 1], 500);
+
   return (
     <div>
-      {springs.map((styles, index) => {
-        return (
-          <animated.div
-            onClick={handleClick}
-            style={{
-              ...styles,
-              height: 200,
-              background: "#ff6d6d",
-              borderRadius: 8,
-              // ...springs,
-            }}
-          />
-        );
-      })}
+      {springs.map((styles1, index) => (
+        <animated.div
+          style={{ ...styles1, ...springs2[index], background: "red" }}
+          className="box"
+        ></animated.div>
+      ))}
     </div>
   );
 }
-
-export default App;
