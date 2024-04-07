@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createContext, useState } from "react";
+import ComOne from "./ComOne";
+import ComTwo from "./ComTwo";
+import { create } from "zustand";
+
+// export const AppContext = createContext();
+
+export const useNumStore = create((set) => ({
+  one: 1,
+  two: 1,
+  setOne: (value) => set((state) => ({ one: value })),
+  setTwo: (value) => set((state) => ({ two: value })),
+}));
 
 function App() {
-  const [count, setCount] = useState(0)
+  // const [one, setOne] = useState(1);
+  // const [two, setTwo] = useState(1);
+  // const { one, two } = useNumStore();
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      {/* {one}, {two} */}
+      <ComOne />
+      <ComTwo />
+    </div>
+  );
+  // return (
+  //   <AppContext.Provider
+  //     value={{
+  //       one: one,
+  //       two: two,
+  //       setOne,
+  //       setTwo,
+  //     }}
+  //   >
+  //     <ComOne />
+  //     <ComTwo />
+  //   </AppContext.Provider>
+  // );
 }
 
-export default App
+export default App;
